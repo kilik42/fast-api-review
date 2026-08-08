@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.requests import Request
 from fastapi.exceptions import RequestValidationError
-
+from app.schemas import PostCreate, PostResponse
 # from fast_api.app import app
 
 
@@ -48,9 +48,9 @@ def get_text_post(post_id: int):
         return JSONResponse(status_code=404, content={"message": "Post not found"}) , HTTPException(status_code=404, detail="Post not found")
 
 @app.post("/text-posts")
-def create_text_post(post: dict):
+def create_text_post(post: PostCreate) -> PostResponse:
     # this will create a new text post based on the data provided in the request body. The post parameter is expected to be a dictionary containing the title and content of the new post. The new post will be added to the text_posts dictionary with a unique ID, and a JSON response will be returned with a message indicating that the post was created successfully.
     new_id = max(text_posts.keys()) + 1
-    text_posts[new_id] = {"id": new_id, "title": post["title"], "content": post["content"]}
-    return JSONResponse(status_code=201, content={"message": "Post created successfully", "post": text_posts[new_id]})
+    text_posts[new_id] = {"id": new_id, "title": post.title, "content": post.content}
+    return PostResponse(**text_posts[new_id])  # ** unpacks the dictionary into keyword arguments, allowing the PostResponse model to be instantiated with the values from the dictionary.
     
