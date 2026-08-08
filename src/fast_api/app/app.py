@@ -53,4 +53,5 @@ def create_text_post(post: PostCreate) -> PostResponse:
     new_id = max(text_posts.keys()) + 1
     text_posts[new_id] = {"id": new_id, "title": post.title, "content": post.content}
     return PostResponse(**text_posts[new_id])  # ** unpacks the dictionary into keyword arguments, allowing the PostResponse model to be instantiated with the values from the dictionary.
-    
+
+
