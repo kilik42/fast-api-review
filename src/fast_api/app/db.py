@@ -33,3 +33,8 @@ class Post(Base):
 # this part of the code creates an asynchronous engine and session maker for interacting with the database. The create_async_engine function is used to create an asynchronous engine that connects to the database specified by DATABASE_URL. The async_sessionmaker function is used to create a session maker that will be used to create asynchronous sessions for interacting with the database. The expire_on_commit=False argument is used to prevent SQLAlchemy from expiring objects in the session after a commit, which can be useful in certain scenarios where you want to keep using the objects after committing changes to the database.
 engine = create_async_engine(DATABASE_URL, echo=True)
 async_session = async_sessionmaker(engine, expire_on_commit=False)
+
+async def create_db_and_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    await engine.dispose()
